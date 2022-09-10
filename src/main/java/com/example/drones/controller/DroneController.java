@@ -17,12 +17,12 @@ public class DroneController {
    private final DroneService droneService;
 
    @PostMapping("/register")
-   public Drone registerDrone(Drone drone) {
+   public Drone registerDrone(@RequestBody Drone drone) {
       return droneService.register(drone);
    }
 
    @PostMapping("/{droneSerialNumber}/load")
-   public ResponseEntity<Void> loadMedication(Medication medication, @PathVariable String droneSerialNumber) {
+   public ResponseEntity<Void> loadMedication(@RequestBody Medication medication, @PathVariable String droneSerialNumber) {
       droneService.loadMedication(droneSerialNumber, medication);
       return ResponseEntity.ok().build();
    }

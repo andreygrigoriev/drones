@@ -11,6 +11,7 @@ spring:
     driverClassName: org.h2.Driver
   jpa:
     show-sql: true
+    defer-datasource-initialization: true
     hibernate:
       ddl-auto: update
 
