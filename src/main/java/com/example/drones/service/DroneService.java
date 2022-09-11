@@ -1,5 +1,7 @@
 package com.example.drones.service;
 
+import com.example.drones.exception.DroneApiException;
+import com.example.drones.exception.DroneNotFoundException;
 import com.example.drones.model.Drone;
 import com.example.drones.model.Medication;
 import com.example.drones.repository.DroneRepository;
@@ -9,6 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -18,11 +21,16 @@ public class DroneService {
    private final AuditService auditService;
 
    private static final String MSG_DRONE_NOT_FOUND = "Drone is not found for serial number %s";
+   private static final String MSG_DRONE_ALREADY_REGISTERED = "Drone with serial number %s was already registered";
    private static final String MSG_BATTERY_LEVEL_TOO_LOW = "Cannot perform items load. Battery level is too low (%s)";
    private static final String MSG_WEIGHT_LIMIT_EXCEEDED = "Cannot perform item load. Drone weight limit (%s) exceeded (%s)";
-   private static final byte BATTERY_LEVEL_TRESHOLD = 25;
+   private static final byte BATTERY_LEVEL_THRESHOLD = 25;
 
    public Drone register(Drone drone) {
+      Optional<Drone> existing = repository.findById(drone.getSerialNumber());
+      if (existing.isPresent()) {
+         throw new DroneApiException(String.format(MSG_DRONE_ALREADY_REGISTERED, drone.getSerialNumber()));
+      }
       return repository.save(drone);
    }
 
@@ -34,8 +42,7 @@ public class DroneService {
       List<Medication> items = drone.getItems();
       items.add(medication);
       drone.setItems(items);
-      repository.save(drone);
-      return drone;
+      return repository.save(drone);
    }
 
    public List<Medication> listMedications(String droneSerialNumber) {
@@ -48,20 +55,20 @@ public class DroneService {
 
    public Drone findDrone(String droneSerialNumber) {
       return repository.findById(droneSerialNumber)
-            .orElseThrow(() -> new RuntimeException(String.format(MSG_DRONE_NOT_FOUND, droneSerialNumber)));
+            .orElseThrow(() -> new DroneNotFoundException(String.format(MSG_DRONE_NOT_FOUND, droneSerialNumber)));
    }
 
    private void validateBatteryLevel(Drone drone) {
       byte batteryLevel = drone.getBatteryCapacity();
-      if (batteryLevel < BATTERY_LEVEL_TRESHOLD) {
-         throw new RuntimeException(String.format(MSG_BATTERY_LEVEL_TOO_LOW, batteryLevel));
+      if (batteryLevel < BATTERY_LEVEL_THRESHOLD) {
+         throw new DroneApiException(String.format(MSG_BATTERY_LEVEL_TOO_LOW, batteryLevel));
       }
    }
 
    private void validateLoadedWeight(Drone drone, Medication medication) {
-      int weight = medication.getWeight();
+      int weight = medication.getWeight() + getCurrentWeight(drone);
       if (weight > drone.getWeightLimit()) {
-         throw new RuntimeException(String.format(MSG_WEIGHT_LIMIT_EXCEEDED, drone.getWeightLimit(), getCurrentWeight(drone)));
+         throw new DroneApiException(String.format(MSG_WEIGHT_LIMIT_EXCEEDED, drone.getWeightLimit(), weight));
       }
    }
 
@@ -73,9 +80,8 @@ public class DroneService {
    @SuppressWarnings("unused")
    private void auditBatteryLevel() {
       log.info("Battery level audit started");
-      repository.findAll().forEach(drone -> {
-         auditService.auditAction("Battery level", drone.getSerialNumber(), String.valueOf(drone.getBatteryCapacity()));
-      });
+      repository.findAll().forEach(drone -> auditService.auditAction("Battery level", drone.getSerialNumber(),
+            String.valueOf(drone.getBatteryCapacity())));
       log.info("Battery level audit finished");
    }
 }

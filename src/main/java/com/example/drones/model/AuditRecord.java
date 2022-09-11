@@ -3,7 +3,6 @@ package com.example.drones.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -13,6 +12,8 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 @IdClass(AuditRecord.PrimaryKey.class)
+@NoArgsConstructor
+@AllArgsConstructor
 public class AuditRecord {
    private static final long serialVersionUID = 1L;
 
@@ -32,7 +33,6 @@ public class AuditRecord {
    @AllArgsConstructor
    @Builder
    public static class PrimaryKey implements Serializable {
-      @Serial
       private static final long serialVersionUID = 1L;
       String name;
       String entity;

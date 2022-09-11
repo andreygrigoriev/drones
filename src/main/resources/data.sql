@@ -1,15 +1,15 @@
-INSERT INTO drones(serial_number, model, weight_limit, battery_capacity, state)
-VALUES ('123', 'LIGHTWEIGHT', 100, 55, 'IDLE');
-INSERT INTO drones(serial_number, model, weight_limit, battery_capacity, state)
-VALUES ('234', 'LIGHTWEIGHT', 200, 20, 'IDLE');
-INSERT INTO drones(serial_number, model, weight_limit, battery_capacity, state)
-VALUES ('345', 'MIDDLEWEIGHT', 300, 80, 'RETURNING');
-INSERT INTO drones(serial_number, model, weight_limit, battery_capacity, state)
-VALUES ('456', 'CRUISERWEIGHT', 500, 80, 'LOADED');
-INSERT INTO drones(serial_number, model, weight_limit, battery_capacity, state)
-VALUES ('567', 'HEAVYWEIGHT', 1200, 80, 'DELIVERING');
-INSERT INTO drones(serial_number, model, weight_limit, battery_capacity, state)
-VALUES ('678', 'HEAVYWEIGHT', 1300, 60, 'IDLE');
+INSERT INTO drones(serial_number, model, battery_capacity, state)
+VALUES ('123', 'LIGHTWEIGHT', 55, 'IDLE');
+INSERT INTO drones(serial_number, model, battery_capacity, state)
+VALUES ('234', 'LIGHTWEIGHT', 20, 'IDLE');
+INSERT INTO drones(serial_number, model, battery_capacity, state)
+VALUES ('345', 'MIDDLEWEIGHT', 80, 'RETURNING');
+INSERT INTO drones(serial_number, model, battery_capacity, state)
+VALUES ('456', 'CRUISERWEIGHT', 80, 'LOADED');
+INSERT INTO drones(serial_number, model, battery_capacity, state)
+VALUES ('567', 'HEAVYWEIGHT', 80, 'DELIVERING');
+INSERT INTO drones(serial_number, model, battery_capacity, state)
+VALUES ('678', 'HEAVYWEIGHT', 60, 'IDLE');
 
 INSERT INTO medications(name, weight, code, picture)
 VALUES ('ibuprofen', 40, 'IBP_0101', 'https://drsilvasultrawellness.com/wp-content/uploads/2019/04/00749603_dghl_ibuprofen_brown_500ct.jpg');

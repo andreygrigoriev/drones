@@ -26,8 +26,6 @@ public class Drone {
    @Enumerated(value = EnumType.STRING)
    private Model model;
 
-   private final int weightLimit = 500;
-
    @PositiveOrZero(message = "'Battery Capacity' parameter should not be negative")
    @Max(value = 100, message = "'Battery Capacity' parameter should be 100 or less")
    private byte batteryCapacity;
@@ -40,11 +38,24 @@ public class Drone {
    @CollectionTable(joinColumns = @JoinColumn(name = "DRONE_ID"))
    private List<Medication> items;
 
-   public static enum State {
+   public int getWeightLimit() {
+      return model.getWeightLimit();
+   }
+
+   @SuppressWarnings("unused")
+   public enum State {
       IDLE, LOADING, LOADED, DELIVERING, DELIVERED, RETURNING
    }
 
-   public static enum Model {
-      LIGHTWEIGHT, MIDDLEWEIGHT, CRUISERWEIGHT, HEAVYWEIGHT
+   @SuppressWarnings("unused")
+   public enum Model {
+      LIGHTWEIGHT(50), MIDDLEWEIGHT(150), CRUISERWEIGHT(300), HEAVYWEIGHT(500);
+
+      @Getter
+      private final int weightLimit;
+
+      Model(int weightLimit) {
+         this.weightLimit = weightLimit;
+      }
    }
 }

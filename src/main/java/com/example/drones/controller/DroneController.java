@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -17,12 +18,12 @@ public class DroneController {
    private final DroneService droneService;
 
    @PostMapping("/register")
-   public Drone registerDrone(@RequestBody Drone drone) {
+   public Drone registerDrone(@Valid @RequestBody Drone drone) {
       return droneService.register(drone);
    }
 
    @PostMapping("/{droneSerialNumber}/load")
-   public ResponseEntity<Void> loadMedication(@RequestBody Medication medication, @PathVariable String droneSerialNumber) {
+   public ResponseEntity<Void> loadMedication(@Valid @RequestBody Medication medication, @PathVariable String droneSerialNumber) {
       droneService.loadMedication(droneSerialNumber, medication);
       return ResponseEntity.ok().build();
    }

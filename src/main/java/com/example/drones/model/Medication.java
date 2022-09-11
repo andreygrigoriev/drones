@@ -26,5 +26,5 @@ public class Medication {
    @Pattern(regexp = "^[A-Z0-9_]+$", message = "Medication code should contain only upper case letters, underscore and numbers")
    private String code;
 
-   private byte[] picture;
+   private String picture;
 }
